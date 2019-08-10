@@ -4,7 +4,7 @@ const directions = document.getElementById("directions");
 function nameElement(element) {
     let name = element.dataset["name"];
     if (name) {
-        element.insertAdjacentText("afterbegin", element.id); //element.dataset["name"]);
+        element.insertAdjacentText("afterbegin", element.dataset["name"]);
     }
 }
 function positionElement(element, x, y, width, height) {

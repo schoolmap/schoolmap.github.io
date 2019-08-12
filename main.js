@@ -1,11 +1,33 @@
 //import PinchZoom from "./node_modules/pinch-zoom-js/src/pinch-zoom.js"//"./node_modules/pinch-zoom-js/dist/pinch-zoom.min.js";
 //const nameable : HTMLTemplateElement = <HTMLTemplateElement> document.getElementById("nameable");
 const directions = document.getElementById("directions");
+const elementsToResizeText = [];
+document.addEventListener("DOMContentLoaded", resizeAllText);
+function resizeAllText() {
+    for (let element of elementsToResizeText) {
+        resizeText(element);
+    }
+}
+function resizeText(element) {
+    let fontSize = parseInt(getComputedStyle(element).fontSize.split("px")[0]);
+    const children = element.children;
+    for (let i = 0; i < children.length; i++) {
+        children[i].style.display = "none";
+    }
+    while (fontSize > 1 && ((element.scrollWidth > element.offsetWidth) || (element.scrollHeight > element.offsetHeight))) {
+        fontSize--;
+        element.style.fontSize = fontSize + "px";
+    }
+    for (let i = 0; i < children.length; i++) {
+        children[i].style.display = "";
+    }
+}
 function nameElement(element) {
     let name = element.dataset["name"];
     if (name) {
-        element.insertAdjacentText("afterbegin", element.dataset["name"]);
+        element.insertAdjacentText("afterbegin", element.dataset["name"]); //element.id);//
     }
+    elementsToResizeText.push(element);
 }
 function positionElement(element, x, y, width, height) {
     element.style.position = "absolute";
@@ -132,6 +154,52 @@ class DirectionLine extends HTMLElement {
 DirectionLine.COLOR = "#2c992c";
 DirectionLine.THICKNESS = 6;
 customElements.define("direction-line", DirectionLine);
+class SearchResult extends HTMLElement {
+    constructor(element) {
+        super();
+        this.element = element;
+        const h4 = document.createElement("h4");
+        this.appendChild(h4);
+        h4.style.marginBottom = "0";
+        h4.appendChild(document.createTextNode(element.dataset["name"]));
+        const tag = element.dataset["tag"];
+        if (tag) {
+            const em = document.createElement("em");
+            this.appendChild(em);
+            em.appendChild(document.createTextNode(tag));
+        }
+        const teacher = element.dataset["teacher"];
+        if (teacher) {
+            this.appendChild(document.createTextNode(teacher));
+        }
+        const a = document.createElement("span");
+        a.classList.add("link");
+        a.appendChild(document.createTextNode("Directions"));
+        a.addEventListener("click", (e) => {
+            try {
+                e.preventDefault();
+                this.removeChild(a);
+                directionLocations.appendChild(this.parentElement);
+                directionLocations.style.display = "";
+                if (directionLocations.childElementCount > 1) {
+                    document.getElementById("search").style.display = "none";
+                    searchResults.style.display = "none";
+                    let directionArray = A_Star(directionLocations.firstElementChild.firstElementChild["element"], this.element);
+                    console.log(directionArray);
+                    drawDirections(directionArray);
+                }
+                else {
+                    toFirstSearch();
+                }
+            }
+            catch (e) { }
+            return false;
+        });
+        this.appendChild(a);
+    }
+}
+SearchResult.BACKGROUND_COLOR = getComputedStyle(document.getElementById("search"))["backgroundColor"];
+customElements.define("search-result", SearchResult);
 const map = document.getElementById("map"), mapContainer = document.getElementById("map-container");
 {
     let oldX = 0, oldY = 0;
@@ -371,6 +439,7 @@ function getAllConnectedNodes(element) {
             pushSelector(`map-door[data-destination=${element.parentElement.id}]`, nodes);
             pushSelector(`map-door[data-destination=${element.dataset["otherStreet"]}]`, nodes);
             pushSelector(`map-intersection[data-other-street=${element.dataset["otherStreet"]}]`, nodes);
+            pushSelector(`map-intersection[data-other-street=${element.parentElement.id}]`, nodes);
             pushSelector("map-intersection", nodes, element.parentElement);
             break;
     }
@@ -405,11 +474,67 @@ class Point {
         this.y = y;
     }
 }
-const searchForm = document.querySelector("#search > form"), searchInput = searchForm.querySelector("input[name=search]");
+const searchForm = document.querySelector("#search > form"), searchInput = searchForm.querySelector("input[name=search]"), searchResults = document.getElementById("results"), oneTimeSearch = document.getElementById("oneTimeSearch"), noResults = document.createElement("em"), directionLocations = document.getElementById("directionLocations");
+noResults.appendChild(document.createTextNode("No results."));
+let firstSearch = true;
+function onFirstSearch() {
+    searchResults.style.display = "";
+    oneTimeSearch.style.display = "none";
+    firstSearch = false;
+}
+function toFirstSearch() {
+    searchResults.style.display = "none";
+    oneTimeSearch.style.display = "";
+    firstSearch = true;
+    while (searchResults.firstElementChild) {
+        searchResults.removeChild(searchResults.firstElementChild);
+    }
+}
 function search(e) {
     e.preventDefault();
-    const data = CSS.escape(searchInput.value);
-    console.log(map.querySelectorAll(`map-room[data-name=${data}], map-room[data-tag=${data}]`), [...map.querySelectorAll("map-room")].filter((element) => (element.dataset["teacher"] && (element.dataset["teacher"].indexOf(data) >= 0 || element.dataset["teacher"].split(".")[1].indexOf(data) >= 0))));
+    if (firstSearch) {
+        onFirstSearch();
+    }
+    while (searchResults.firstElementChild) {
+        searchResults.removeChild(searchResults.firstElementChild);
+    }
+    const data = searchInput.value, dataEscape = CSS.escape(data);
+    let results = [];
+    results.push(...map.querySelectorAll("map-room"));
+    results = results.filter((element) => ((element.dataset["name"] &&
+        (element.dataset["name"].indexOf(data) >= 0)) ||
+        (element.dataset["teacher"] &&
+            (element.dataset["teacher"].indexOf(data) >= 0 ||
+                element.dataset["teacher"].split(".")[1].indexOf(data) >= 0)) ||
+        (element.dataset["tag"] &&
+            (element.dataset["tag"].indexOf(data) >= 0))));
+    results.sort((first, second) => {
+        const firstString = ((second.dataset["name"] &&
+            (second.dataset["name"].indexOf(data) >= 0)) ? second.dataset["name"] : ((second.dataset["teacher"] &&
+            (second.dataset["teacher"].indexOf(data) >= 0 ||
+                second.dataset["teacher"].split(".")[1].indexOf(data) >= 0)) ? second.dataset["teacher"] : ((second.dataset["tag"] &&
+            (second.dataset["tag"].indexOf(data) >= 0)) ? second.dataset["tag"] : (console.log("Error", second), "")))), secondString = ((first.dataset["name"] &&
+            (first.dataset["name"].indexOf(data) >= 0)) ? first.dataset["name"] : ((first.dataset["teacher"] &&
+            (first.dataset["teacher"].indexOf(data) >= 0 ||
+                first.dataset["teacher"].split(".")[1].indexOf(data) >= 0)) ? first.dataset["teacher"] : ((first.dataset["tag"] &&
+            (first.dataset["tag"].indexOf(data) >= 0)) ? first.dataset["tag"] : (console.log("Error", first), "")))), difference = secondString.length - firstString.length;
+        if (difference === 0) {
+            return -firstString.localeCompare(secondString);
+        }
+        else {
+            return difference;
+        }
+    });
+    if (results.length > 0) {
+        for (let element of results) {
+            const li = document.createElement("li");
+            li.append(new SearchResult(element));
+            searchResults.appendChild(li);
+        }
+    }
+    else {
+        searchResults.appendChild(noResults);
+    }
 }
 searchForm.addEventListener("submit", search);
 //# sourceMappingURL=main.js.map

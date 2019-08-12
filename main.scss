@@ -35,7 +35,7 @@ $background-color: white;
 }
 
 $z-indexes: (
-  "search",
+  "floating",
   "directions",
   "rooms",
   "streets",
@@ -97,12 +97,24 @@ direction-line {
   @include z("directions");
 }
 
-#search {
-  @include z("search");
+#floating {
+  @include z("floating");
   position: absolute;
   padding: 5px;
   background-color: darken($background-color, 5);
   border: darken($background-color, 10) 1px solid;
+}
+
+#search {
+  @include z("floating");
+  background-color: darken($background-color, 5);
+  border: darken($background-color, 10) 1px solid;
+}
+
+.link {
+  color: rgb(0, 0, 238);
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 /*

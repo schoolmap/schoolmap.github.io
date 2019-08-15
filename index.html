@@ -27,8 +27,9 @@
     </ol>
     <div id="search">
         <form>
-            <input type="text" placeholder="Room number, name, or teacher" name="search">
-            <button type="submit">Search</button>
+            <input id="searchInput" type="text" placeholder="Room number, name, or teacher" name="search">
+            <button id="searchButton" type="submit">Search</button>
+            <button id="collapse" type="button">&gt;</button>
         </form>
     </div>
     <em id="oneTimeSearch">Search above to get directions</em>
@@ -137,7 +138,7 @@
             <map-room id="room14" data-name="906" data-width="58" data-height="48" data-x="312" data-y="81">
                 <map-door data-destination="street10" data-position="bottom"></map-door>
             </map-room>
-            <map-street id="street7" data-name="Zaching Ln." data-width="16" data-height="222" data-x="370" data-y="81">
+            <map-street id="street7" data-vertical="true" data-name="Zaching Ln." data-width="16" data-height="222" data-x="370" data-y="81">
                 <map-intersection data-other-street="street12"></map-intersection>
             </map-street>
             <map-room id="room15" data-vertical="true" data-name="905" data-width="48" data-height="48" data-x="386" data-y="81">
@@ -158,30 +159,35 @@
             <map-room id="room18" data-name="P-2" data-width="33" data-height="17" data-x="546" data-y="109">
                 <map-door data-destination="street9" data-position="top"></map-door>
             </map-room>
-            <map-room id="room19" data-name="&nbsp;" data-width="16" data-height="58" data-x="595" data-y="109">
+            <!--<map-room id="room19" data-name="&nbsp;" data-width="16" data-height="58" data-x="595" data-y="109">
                 <map-door data-destination="street" data-position=""></map-door>
-            </map-room>
+            </map-room>-->
             <map-room id="room20" data-name="Auxillary Gym" data-width="113" data-height="120" data-x="595" data-y="109">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="room57" data-position="bottom"></map-door>
+                <map-door data-destination="room43" data-position="left"></map-door>
+                <map-door data-destination="room38" data-position="right"></map-door>
             </map-room>
             <map-room id="room21" data-name="Exit 13" data-width="16" data-height="10" data-x="450" data-y="116">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street8" data-position="left"></map-door>
             </map-room>
-            <map-room id="room22" data-name="Sp Ed&nbsp;" data-width="32" data-height="14" data-x="450" data-y="126">
-                <map-door data-destination="street" data-position=""></map-door>
+            <map-room id="room22" data-name="Sp Ed" data-width="32" data-height="14" data-x="450" data-y="126">
+                <map-door data-destination="street11" data-position="left"></map-door>
             </map-room>
             <map-room id="room23" data-name="Conf." data-width="16" data-height="54" data-x="482" data-y="126">
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-room id="room24" data-name="911" data-width="74" data-height="69" data-x="56" data-y="129">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street6" data-position="right"></map-door>
             </map-room>
             <map-street id="street10" data-name="Constitution Ave." data-width="224" data-height="38" data-x="146" data-y="129">
+                <map-intersection data-other-street="street6"></map-intersection>
+                <map-intersection data-other-street="street7"></map-intersection>
             </map-street>
             <map-room id="room25" data-name="904" data-width="48" data-height="51" data-x="386" data-y="129">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street7" data-position="left"></map-door>
             </map-room>
             <map-street id="street11" data-vertical="true" data-name="Fortunato Dr." data-width="16" data-height="174" data-x="434" data-y="129">
+                <map-intersection data-other-street="street13"></map-intersection>
             </map-street>
             <map-room id="room26" data-name="Exit 19" data-width="32" data-height="11" data-x="709" data-y="129">
                 <map-door data-destination="street" data-position=""></map-door>
@@ -190,94 +196,74 @@
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-room id="room28" data-name="ST" data-width="16" data-height="27" data-x="450" data-y="140">
-                <map-door data-destination="street" data-position=""></map-door>
-            </map-room>
-            <map-room id="room29" data-name="&nbsp;" data-width="16" data-height="27" data-x="741" data-y="140">
-                <map-door data-destination="street" data-position=""></map-door>
-            </map-room>
-            <map-room id="room30" data-name="&nbsp;" data-width="16" data-height="27" data-x="757" data-y="140">
-                <map-door data-destination="street" data-position=""></map-door>
-            </map-room>
-            <map-room id="room31" data-name="&nbsp;" data-width="16" data-height="27" data-x="773" data-y="140">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street11" data-position="left"></map-door>
             </map-room>
             <map-room id="room32" data-name="Storage" data-width="32" data-height="22" data-x="146" data-y="167">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street10" data-position="top"></map-door>
             </map-room>
             <map-room id="room33" data-name="Storage" data-width="48" data-height="22" data-x="178" data-y="167">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street10" data-position="top"></map-door>
             </map-room>
             <map-room id="room34" data-name="&nbsp;" data-width="16" data-height="22" data-x="226" data-y="167">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street10" data-position="top"></map-door>
+                <map-door data-destination="street45" data-position="bottom"></map-door>
             </map-room>
             <map-room id="room35" data-name="917" data-width="128" data-height="62" data-x="242" data-y="167">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street10" data-position="top"></map-door>
             </map-room>
             <map-room id="room36" data-name="Sp Ed" data-width="32" data-height="13" data-x="450" data-y="167">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street11" data-position="left"></map-door>
             </map-room>
             <map-room id="room37" data-name="&nbsp;" data-width="16" data-height="13" data-x="530" data-y="167">
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-room id="room38" data-name="Girls' Locker Room" data-width="80" data-height="288" data-x="709" data-y="141">
-                <map-door data-destination="street" data-position=""></map-door>
-            </map-room>
-            <map-room id="room39" data-name="&nbsp;" data-width="155" data-height="53" data-x="1080" data-y="167">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street14" data-position="bottom"></map-door>
+                <map-door data-destination="room57" data-position="left"></map-door>
             </map-room>
             <map-room id="room40" data-name="903" data-width="48" data-height="49" data-x="386" data-y="180">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street7" data-position="left"></map-door>
             </map-room>
             <map-room id="room41" data-name="Sp Ed" data-width="16" data-height="40" data-x="450" data-y="180">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street11" data-position="left"></map-door>
             </map-room>
             <map-room id="room42" data-name="OT/PT" data-width="32" data-height="40" data-x="466" data-y="180">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="room41" data-position="left"></map-door>
             </map-room>
             <map-room id="room43" data-name="Boys' Locker Room" data-width="96" data-height="249" data-x="498" data-y="180">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="room14" data-position="bottom"></map-door>
+                <map-door data-destination="street57" data-position="right"></map-door>
             </map-room>
             <map-room id="room44" data-name="918" data-width="32" data-height="58" data-x="146" data-y="189">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street6" data-position="left"></map-door>
             </map-room>
             <map-room id="room45" data-name="Teacher Planning" data-width="64" data-height="58" data-x="178" data-y="189">
-                <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-room id="room46" data-name="912" data-width="74" data-height="49" data-x="56" data-y="198">
-                <map-door data-destination="street" data-position=""></map-door>
-            </map-room>
-            <map-room id="room47" data-name="&nbsp;" data-width="16" data-height="13" data-x="789" data-y="198">
-                <map-door data-destination="street" data-position=""></map-door>
-            </map-room>
-            <map-room id="room48" data-name="&nbsp;" data-width="16" data-height="13" data-x="805" data-y="198">
-                <map-door data-destination="street" data-position=""></map-door>
-            </map-room>
-            <map-room id="room49" data-name="&nbsp;" data-width="17" data-height="13" data-x="821" data-y="198">
-                <map-door data-destination="street" data-position=""></map-door>
-            </map-room>
-            <map-room id="room50" data-name="&nbsp;" data-width="17" data-height="13" data-x="838" data-y="198">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street6" data-position="right"></map-door>
             </map-room>
             <map-room id="room51" data-name="Boiler Room" data-width="66" data-height="150" data-x="789" data-y="211">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="room80" data-position="bottom"></map-door>
             </map-room>
             <map-room id="room52" data-name="&nbsp;" data-width="34" data-height="92" data-x="855" data-y="211">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="room51" data-position="left"></map-door>
             </map-room>
             <map-room id="room53" data-name="901" data-width="48" data-height="49" data-x="450" data-y="220">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street11" data-position="left"></map-door>
             </map-room>
             <map-room id="room54" data-name="Office" data-width="70" data-height="18" data-x="242" data-y="229">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="room45" data-position="left"></map-door>
+                <map-door data-destination="room55" data-position="right"></map-door>
             </map-room>
             <map-room id="room55" data-name="916" data-width="58" data-height="18" data-x="312" data-y="229">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street7" data-position="right"></map-door>
             </map-room>
             <map-room id="room56" data-name="902" data-width="48" data-height="49" data-x="386" data-y="229">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street7" data-position="left"></map-door>
             </map-room>
             <map-room id="room57" data-name="Gymnasium" data-width="114" data-height="200" data-x="595" data-y="229">
-                <map-door data-destination="street" data-position=""></map-door>
+                <map-door data-destination="street14" data-position="bottom"></map-door>
+                <map-door data-destination="room20" data-position="top"></map-door>
             </map-room>
             <map-room id="room58" data-name="913" data-width="74" data-height="56" data-x="56" data-y="247">
                 <map-door data-destination="street" data-position=""></map-door>
@@ -325,8 +311,10 @@
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-street id="street12" data-name="PEMDAStreet" data-width="346" data-height="31" data-x="56" data-y="303">
+                <map-intersection data-other-street="street13"></map-intersection>
             </map-street>
             <map-street id="street13" data-vertical="true" data-name="Eagle's Nest" data-width="48" data-height="126" data-x="402" data-y="303">
+                <map-intersection data-other-street="street14"></map-intersection>
             </map-street>
             <map-room id="room73" data-name="407" data-width="48" data-height="36" data-x="24" data-y="334">
                 <map-door data-destination="street" data-position=""></map-door>
@@ -406,6 +394,7 @@
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-street id="street15" data-vertical="true" data-name="Book Ave." data-width="26" data-height="476" data-x="328" data-y="457">
+                <map-intersection data-other-street="street14"></map-intersection>
             </map-street>
             <map-room id="room98" data-name="306" data-width="64" data-height="18" data-x="354" data-y="457">
                 <map-door data-destination="street" data-position=""></map-door>
@@ -420,6 +409,8 @@
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-street id="street16" data-vertical="true" data-name="Eagles Way" data-width="16" data-height="354" data-x="595" data-y="457">
+                <map-intersection data-other-street="street14"></map-intersection>
+                <map-intersection data-other-street="street24"></map-intersection>
             </map-street>
             <map-room id="room102" data-name="Auditorium" data-width="130" data-height="129" data-x="611" data-y="457">
                 <map-door data-destination="street" data-position=""></map-door>
@@ -473,6 +464,8 @@
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-street id="street17" data-name="Bard Ave." data-width="241" data-height="18" data-x="354" data-y="520">
+                <map-intersection data-other-street="street15"></map-intersection>
+                <map-intersection data-other-street="street16"></map-intersection>
             </map-street>
             <map-room id="room119" data-name="206" data-width="48" data-height="48" data-x="354" data-y="538">
                 <map-door data-destination="street" data-position=""></map-door>
@@ -493,6 +486,7 @@
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-street id="street18" data-name="Periodic Dr." data-width="304" data-height="25" data-x="24" data-y="547">
+                <map-intersection data-other-street="street15"></map-intersection>
             </map-street>
             <map-room id="room125" data-name="801" data-width="33" data-height="30" data-x="805" data-y="556">
                 <map-door data-destination="street" data-position=""></map-door>
@@ -537,6 +531,7 @@
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-street id="street19" data-name="Broadway" data-width="178" data-height="32" data-x="611" data-y="586">
+                <map-intersection data-other-street="street16"></map-intersection>
             </map-street>
             <map-room id="room139" data-name="Storage" data-width="49" data-height="32" data-x="789" data-y="586">
                 <map-door data-destination="street" data-position=""></map-door>
@@ -602,6 +597,8 @@
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-street id="street20" data-name="International Way" data-width="241" data-height="18" data-x="354" data-y="672">
+                <map-intersection data-other-street="street15"></map-intersection>
+                <map-intersection data-other-street="street16"></map-intersection>
             </map-street>
             <map-room id="room160" data-name="Dell Computer Lab" data-width="48" data-height="61" data-x="24" data-y="690">
                 <map-door data-destination="street" data-position=""></map-door>
@@ -651,6 +648,7 @@
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-street id="street22" data-name="Soaring St." data-width="162" data-height="32" data-x="611" data-y="719">
+                <map-intersection data-other-street="street16"></map-intersection>
             </map-street>
             <map-room id="room175" data-name="Exit 27" data-width="32" data-height="32" data-x="773" data-y="719">
                 <map-door data-destination="street" data-position=""></map-door>
@@ -665,6 +663,7 @@
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-street id="street23" data-name="Java St." data-width="272" data-height="29" data-x="56" data-y="751">
+                <map-intersection data-other-street="street15"></map-intersection>
             </map-street>
             <map-room id="room179" data-name="Cafeteria" data-width="82" data-height="205" data-x="611" data-y="751">
                 <map-door data-destination="street" data-position=""></map-door>
@@ -745,6 +744,7 @@
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-street id="street24" data-name="Student St." data-width="257" data-height="26" data-x="354" data-y="811">
+                <map-intersection data-other-street="street15"></map-intersection>
             </map-street>
             <map-room id="room205" data-name="&nbsp;" data-width="16" data-height="13" data-x="40" data-y="824">
                 <map-door data-destination="street" data-position=""></map-door>
@@ -759,6 +759,7 @@
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-street id="street25" data-name="-" data-width="16" data-height="31" data-x="386" data-y="837">
+                <map-intersection data-other-street="street24"></map-intersection>
             </map-street>
             <map-room id="room209" data-name="Principal" data-width="48" data-height="47" data-x="402" data-y="837">
                 <map-door data-destination="street" data-position=""></map-door>
@@ -775,9 +776,9 @@
             <map-room id="room213" data-name="Front Office" data-width="49" data-height="47" data-x="514" data-y="837">
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
-            <map-room id="room214" data-name="Main Foyer" data-width="48" data-height="96" data-x="563" data-y="837">
-                <map-door data-destination="street" data-position=""></map-door>
-            </map-room>
+            <map-street id="street27" data-name="Main Foyer" data-width="48" data-height="96" data-x="563" data-y="837">
+                <map-intersection data-other-street="street24"></map-intersection>
+            </map-street>
             <map-room id="room215" data-name="&nbsp;" data-width="16" data-height="17" data-x="40" data-y="851">
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
@@ -815,6 +816,7 @@
                 <map-door data-destination="street" data-position=""></map-door>
             </map-room>
             <map-street id="street26" data-name="-" data-width="16" data-height="17" data-x="386" data-y="884">
+                <map-intersection data-other-street="street27"></map-intersection>
             </map-street>
             <map-room id="room227" data-name="Faculty Dining" data-width="48" data-height="72" data-x="693" data-y="884">
                 <map-door data-destination="street" data-position=""></map-door>

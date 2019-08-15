@@ -98,6 +98,8 @@ direction-line {
   padding: 5px;
   background-color: #f2f2f2;
   border: #e6e6e6 1px solid;
+  overflow-y: auto;
+  max-height: 100%;
 }
 
 #search {
@@ -110,6 +112,10 @@ direction-line {
   color: #0000ee;
   cursor: pointer;
   text-decoration: underline;
+}
+
+#collapse {
+  visibility: visible;
 }
 
 /*

@@ -33,7 +33,7 @@ function resizeText(element : HTMLElement) {
 function nameElement(element : HTMLElement) {
     let name = element.dataset["name"];
     if (name) {
-        element.insertAdjacentText("afterbegin", element.dataset["name"]);//element.id);//
+        element.insertAdjacentText("afterbegin", element.id);//element.dataset["name"]);//
     }
     elementsToResizeText.push(element);
 }
@@ -671,3 +671,27 @@ function search(e : Event) {
 }
 
 searchForm.addEventListener("submit", search);
+
+const floating = document.getElementById("floating"),
+    collapse = document.getElementById("collapse"),
+    searchButton : HTMLElement = searchForm.querySelector("button[type=submit]");
+
+function collapseFloating() {
+    floating.style.visibility = "hidden";
+    searchInput.style.display = "none";
+    searchButton.style.display = "none";
+    collapse.innerText = "<";
+    collapse.addEventListener("click", expandFloating);
+    collapse.removeEventListener("click", collapseFloating);
+}
+
+function expandFloating() {
+    floating.style.visibility = "";
+    searchInput.style.display = "";
+    searchButton.style.display = "";
+    collapse.innerText = ">";
+    collapse.addEventListener("click", collapseFloating);
+    collapse.removeEventListener("click", expandFloating);
+}
+
+collapse.addEventListener("click", collapseFloating);

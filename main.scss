@@ -103,6 +103,8 @@ direction-line {
   padding: 5px;
   background-color: darken($background-color, 5);
   border: darken($background-color, 10) 1px solid;
+  overflow-y: auto;
+  max-height: 100%;
 }
 
 #search {
@@ -115,6 +117,10 @@ direction-line {
   color: rgb(0, 0, 238);
   cursor: pointer;
   text-decoration: underline;
+}
+
+#collapse {
+  visibility: visible;
 }
 
 /*

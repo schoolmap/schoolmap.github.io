@@ -33,7 +33,7 @@ function resizeText(element : HTMLElement) {
 function nameElement(element : HTMLElement) {
     let name = element.dataset["name"];
     if (name) {
-        element.insertAdjacentText("afterbegin", element.id);//element.dataset["name"]);//
+        element.insertAdjacentText("afterbegin", element.dataset["name"]);//element.id);//
     }
     elementsToResizeText.push(element);
 }

@@ -1,5 +1,4 @@
-//import PinchZoom from "./node_modules/pinch-zoom-js/src/pinch-zoom.js"//"./node_modules/pinch-zoom-js/dist/pinch-zoom.min.js";
-//const nameable : HTMLTemplateElement = <HTMLTemplateElement> document.getElementById("nameable");
+console.log = function () { }; // Dirty disable all logging
 const directions = document.getElementById("directions");
 const elementsToResizeText = [];
 document.addEventListener("DOMContentLoaded", resizeAllText);
@@ -25,105 +24,50 @@ function resizeText(element) {
 function nameElement(element) {
     let name = element.dataset["name"];
     if (name) {
-        element.insertAdjacentText("afterbegin", element.dataset["name"]);//element.id); //
+        element.insertAdjacentText("afterbegin", element.dataset["name"]); //element.dataset["name"]+" ("+element.id+")");//element.id);//
     }
     elementsToResizeText.push(element);
 }
+function dataPositionElementOffset(element) {
+    if (element.dataset["offsetLeft"]) {
+        element.style.left = (parseInt(element.style.left.replace("px", "")) + parseInt(element.dataset["offsetLeft"])).toString() + "px";
+    }
+    if (element.dataset["offsetTop"]) {
+        element.style.top = (parseInt(element.style.top.replace("px", "")) + parseInt(element.dataset["offsetTop"])).toString() + "px";
+    }
+}
 function positionElement(element, x, y, width, height) {
     element.style.position = "absolute";
+    if (element.tagName.toLowerCase() == "map-room") {
+        x -= (MapRoom.LINE_THICKNESS / 2);
+        y -= (MapRoom.LINE_THICKNESS / 2);
+        width += MapRoom.LINE_THICKNESS;
+        height += MapRoom.LINE_THICKNESS;
+    }
     element.style.left = x.toString() + "px";
     element.style.top = y.toString() + "px";
     element.style.width = width.toString() + "px";
     element.style.height = height.toString() + "px";
 }
 function dataPositionElement(element) {
-    positionElement(element, element.dataset["x"], element.dataset["y"], element.dataset["width"], element.dataset["height"]);
+    positionElement(element, parseInt(element.dataset["x"]), parseInt(element.dataset["y"]), parseInt(element.dataset["width"]), parseInt(element.dataset["height"]));
+    dataPositionElementOffset(element);
 }
 class MapRoom extends HTMLElement {
     constructor() {
         super();
         nameElement(this);
-        this.style.outline = `${MapRoom.LINE_THICKNESS} ${MapRoom.LINE_COLOR} solid`;
+        this.style.outline = `${MapRoom.LINE_THICKNESS}px ${MapRoom.LINE_COLOR} solid`;
         this.style.backgroundColor = MapRoom.COLOR;
         dataPositionElement(this);
         //const shadowRoot = this.attachShadow({mode: 'open'});
         //shadowRoot.appendChild(document.createElement("slot"));
     }
 }
-MapRoom.LINE_THICKNESS = "1px";
+MapRoom.LINE_THICKNESS = 1;
 MapRoom.LINE_COLOR = "#000000";
 MapRoom.COLOR = "#ffeed9";
 customElements.define("map-room", MapRoom);
-class MapDoor extends HTMLElement {
-    constructor() {
-        super();
-        nameElement(this);
-        this.style.position = "absolute";
-        this.style.borderBottom = `${MapRoom.LINE_THICKNESS} ${MapRoom.COLOR} solid`;
-        this.style.borderRight = `${MapRoom.LINE_THICKNESS} ${MapRoom.COLOR} solid`;
-        const shadowRoot = this.attachShadow({ mode: 'open' });
-        const span = document.createElement("span");
-        span.style.position = "absolute";
-        span.style.left = "0";
-        switch (this.dataset["position"]) {
-            case "top":
-                this.style.width = MapDoor.SIZE; //this.shadowRoot.host.clientWidth+"px";
-                this.style.height = "0";
-                this.style.left = (this.parentElement.clientWidth / 2) + "px";
-                this.style.top = "0";
-                this.style.top = `-${MapRoom.LINE_THICKNESS}`;
-                span.style.width = MapDoor.SIZE;
-                span.style.height = "0";
-                span.style.transform = `rotate(${MapDoor.ANGLE})`;
-                span.style.transformOrigin = "right bottom";
-                span.style.borderBottom = `${MapRoom.LINE_THICKNESS} ${MapRoom.LINE_COLOR} solid`;
-                span.style.borderRight = `${MapRoom.LINE_THICKNESS} ${MapRoom.LINE_COLOR} solid`;
-                break;
-            case "bottom":
-                this.style.width = MapDoor.SIZE;
-                this.style.height = "0";
-                this.style.left = (this.parentElement.clientWidth / 2) + "px";
-                this.style.top = this.parentElement.clientHeight + "px";
-                span.style.width = MapDoor.SIZE;
-                span.style.height = "0";
-                span.style.transform = `rotate(${MapDoor.ANGLE})`;
-                span.style.transformOrigin = "left top";
-                span.style.borderTop = `${MapRoom.LINE_THICKNESS} ${MapRoom.LINE_COLOR} solid`;
-                span.style.borderRight = `${MapRoom.LINE_THICKNESS} ${MapRoom.LINE_COLOR} solid`;
-                break;
-            case "left":
-                this.style.width = "0";
-                this.style.height = MapDoor.SIZE;
-                this.style.left = "0";
-                this.style.top = (this.parentElement.clientHeight / 2) + "px";
-                this.style.left = `-${MapRoom.LINE_THICKNESS}`;
-                span.style.width = "0";
-                span.style.height = MapDoor.SIZE;
-                span.style.transform = `rotate(${MapDoor.ANGLE})`;
-                span.style.transformOrigin = "right top";
-                span.style.borderBottom = `${MapRoom.LINE_THICKNESS} ${MapRoom.LINE_COLOR} solid`;
-                span.style.borderRight = `${MapRoom.LINE_THICKNESS} ${MapRoom.LINE_COLOR} solid`;
-                break;
-            case "right":
-                this.style.width = "0";
-                this.style.height = MapDoor.SIZE;
-                this.style.left = this.parentElement.clientWidth + "px";
-                this.style.top = (this.parentElement.clientHeight / 2) + "px";
-                span.style.width = "0";
-                span.style.height = MapDoor.SIZE;
-                span.style.transform = `rotate(${MapDoor.ANGLE})`;
-                span.style.transformOrigin = "left bottom";
-                span.style.borderBottom = `${MapRoom.LINE_THICKNESS} ${MapRoom.LINE_COLOR} solid`;
-                span.style.borderRight = `${MapRoom.LINE_THICKNESS} ${MapRoom.LINE_COLOR} solid`;
-                break;
-        }
-        span.classList.add("door-swing");
-        shadowRoot.appendChild(span);
-    }
-}
-MapDoor.SIZE = "10px";
-MapDoor.ANGLE = "30deg";
-customElements.define("map-door", MapDoor);
 class MapStreet extends HTMLElement {
     constructor() {
         super();
@@ -137,6 +81,94 @@ class MapStreet extends HTMLElement {
 }
 MapStreet.COLOR = "#d9d9ff";
 customElements.define("map-street", MapStreet);
+class MapIntersection extends HTMLElement {
+    get clientHeight() {
+        return this.parentElement.clientHeight;
+    }
+    get clientWidth() {
+        return this.parentElement.clientWidth;
+    }
+}
+customElements.define("map-intersection", MapIntersection);
+class MapDoor extends HTMLElement {
+    constructor() {
+        super();
+        nameElement(this);
+        this.style.position = "absolute";
+        switch (this.parentElement.tagName.toLowerCase()) {
+            case "map-room":
+                this.style.borderBottom = `${MapRoom.LINE_THICKNESS / 2}px ${MapRoom.COLOR} solid`;
+                this.style.borderRight = `${MapRoom.LINE_THICKNESS / 2}px ${MapRoom.COLOR} solid`;
+                break;
+            case "map-street":
+                this.style.borderBottom = `${MapRoom.LINE_THICKNESS / 2}px ${MapStreet.COLOR} solid`;
+                this.style.borderRight = `${MapRoom.LINE_THICKNESS / 2}px ${MapStreet.COLOR} solid`;
+                break;
+        }
+        const shadowRoot = this.attachShadow({ mode: 'open' });
+        const span = document.createElement("span");
+        span.style.position = "absolute";
+        span.style.left = "0";
+        switch (this.dataset["position"]) {
+            case "top":
+                this.style.width = MapDoor.SIZE.toString() + "px";
+                this.style.height = "0";
+                this.style.left = ((this.parentElement.clientWidth - MapDoor.SIZE) / 2) + "px";
+                this.style.top = "0";
+                this.style.top = `-${MapRoom.LINE_THICKNESS / 2}px`;
+                span.style.width = MapDoor.SIZE.toString() + "px";
+                span.style.height = "0";
+                span.style.transform = `rotate(${MapDoor.ANGLE})`;
+                span.style.transformOrigin = "right bottom";
+                span.style.borderBottom = `${MapRoom.LINE_THICKNESS / 2}px ${MapRoom.LINE_COLOR} solid`;
+                span.style.borderRight = `${MapRoom.LINE_THICKNESS / 2}px ${MapRoom.LINE_COLOR} solid`;
+                break;
+            case "bottom":
+                this.style.width = MapDoor.SIZE.toString() + "px";
+                this.style.height = "0";
+                this.style.left = ((this.parentElement.clientWidth - MapDoor.SIZE) / 2) + "px";
+                this.style.top = this.parentElement.clientHeight + "px";
+                span.style.width = MapDoor.SIZE.toString() + "px";
+                span.style.height = "0";
+                span.style.transform = `rotate(${MapDoor.ANGLE})`;
+                span.style.transformOrigin = "left top";
+                span.style.borderTop = `${MapRoom.LINE_THICKNESS / 2}px ${MapRoom.LINE_COLOR} solid`;
+                span.style.borderRight = `${MapRoom.LINE_THICKNESS / 2}px ${MapRoom.LINE_COLOR} solid`;
+                break;
+            case "left":
+                this.style.width = "0";
+                this.style.height = MapDoor.SIZE.toString() + "px";
+                this.style.left = "0";
+                this.style.top = ((this.parentElement.clientHeight - MapDoor.SIZE) / 2) + "px";
+                this.style.left = `-${MapRoom.LINE_THICKNESS / 2}px`;
+                span.style.width = "0";
+                span.style.height = MapDoor.SIZE.toString() + "px";
+                span.style.transform = `rotate(${MapDoor.ANGLE})`;
+                span.style.transformOrigin = "right top";
+                span.style.borderBottom = `${MapRoom.LINE_THICKNESS / 2}px ${MapRoom.LINE_COLOR} solid`;
+                span.style.borderRight = `${MapRoom.LINE_THICKNESS / 2}px ${MapRoom.LINE_COLOR} solid`;
+                break;
+            case "right":
+                this.style.width = "0";
+                this.style.height = MapDoor.SIZE.toString() + "px";
+                this.style.left = this.parentElement.clientWidth + "px";
+                this.style.top = ((this.parentElement.clientHeight - MapDoor.SIZE) / 2) + "px";
+                span.style.width = "0";
+                span.style.height = MapDoor.SIZE.toString() + "px";
+                span.style.transform = `rotate(${MapDoor.ANGLE})`;
+                span.style.transformOrigin = "left bottom";
+                span.style.borderBottom = `${MapRoom.LINE_THICKNESS / 2}px ${MapRoom.LINE_COLOR} solid`;
+                span.style.borderRight = `${MapRoom.LINE_THICKNESS / 2}px ${MapRoom.LINE_COLOR} solid`;
+                break;
+        }
+        span.classList.add("door-swing");
+        shadowRoot.appendChild(span);
+        dataPositionElementOffset(this);
+    }
+}
+MapDoor.SIZE = 10;
+MapDoor.ANGLE = "30deg";
+customElements.define("map-door", MapDoor);
 class DirectionLine extends HTMLElement {
     constructor(x1, y1, x2, y2) {
         super();
@@ -181,18 +213,31 @@ class SearchResult extends HTMLElement {
                 this.removeChild(a);
                 directionLocations.appendChild(this.parentElement);
                 directionLocations.style.display = "";
-                if (directionLocations.childElementCount > 1) {
-                    document.getElementById("search").style.display = "none";
-                    searchResults.style.display = "none";
-                    let directionArray = A_Star(directionLocations.firstElementChild.firstElementChild["element"], this.element);
-                    console.log(directionArray);
-                    drawDirections(directionArray);
-                }
-                else {
-                    toFirstSearch();
+                switch (directionLocations.childElementCount) {
+                    case 2:
+                        searchResults.style.display = "none";
+                        let directionArray = A_Star(directionLocations.firstElementChild.firstElementChild["element"], this.element);
+                        console.log(directionArray);
+                        drawDirections(directionArray);
+                        break;
+                    case 1:
+                        toFirstSearch();
+                        directions.appendChild(createHighLight(this.element));
+                        break;
+                    default:
+                        while (directionLocations.childElementCount > 1) {
+                            directionLocations.removeChild(directionLocations.firstElementChild);
+                        }
+                        while (directions.firstElementChild) {
+                            directions.removeChild(directions.firstElementChild);
+                        }
+                        toFirstSearch();
+                        directions.appendChild(createHighLight(this.element));
                 }
             }
-            catch (e) { }
+            catch (e) {
+                console.error(e);
+            }
             return false;
         });
         this.appendChild(a);
@@ -200,104 +245,16 @@ class SearchResult extends HTMLElement {
 }
 SearchResult.BACKGROUND_COLOR = getComputedStyle(document.getElementById("search"))["backgroundColor"];
 customElements.define("search-result", SearchResult);
-const map = document.getElementById("map"), mapContainer = document.getElementById("map-container");
-{
-    let oldX = 0, oldY = 0;
-    //mapContainer.addEventListener("pointerdown", down);
-    function down(e) {
-        e.preventDefault();
-        console.log("down");
-        oldX = e.clientX;
-        oldY = e.clientY;
-        mapContainer.addEventListener("pointerup", stop);
-        mapContainer.addEventListener("pointercancel", stop);
-        //mapContainer.addEventListener("pointerout", stop);
-        mapContainer.addEventListener("pointerleave", stop);
-        mapContainer.addEventListener("pointermove", move);
-    }
-    function move(e) {
-        e.preventDefault();
-        console.log("move");
-        map.style.top = (map.offsetTop - (oldY - e.clientY)) + "px";
-        map.style.left = (map.offsetLeft - (oldX - e.clientX)) + "px";
-        oldX = e.clientX;
-        oldY = e.clientY;
-    }
-    function stop() {
-        console.log("stop");
-        mapContainer.removeEventListener("pointerup", stop);
-        mapContainer.removeEventListener("pointercancel", stop);
-        //mapContainer.removeEventListener("pointerout", stop);
-        mapContainer.removeEventListener("pointerleave", stop);
-        mapContainer.removeEventListener("pointermove", move);
-    }
+const map = document.getElementById("map"), mapContainer = document.getElementById("map-container"), ROOM_DOOR_SHORTCUT_AVERSION_WEIGHT = 100; // this
+function createHighLight(element) {
+    let div = document.createElement("div");
+    div.classList.add("highlight");
+    div.style.width = (element.offsetWidth - (MapRoom.LINE_THICKNESS * 2)) + "px";
+    div.style.height = (element.offsetHeight - (MapRoom.LINE_THICKNESS * 2)) + "px";
+    div.style.left = element.offsetLeft + "px";
+    div.style.top = element.offsetTop + "px";
+    return div;
 }
-{
-    let evCache = [];
-    let prevDiff = -1;
-    function pointerdown_handler(ev) {
-        evCache.push(ev);
-    }
-    function pointermove_handler(ev) {
-        for (let i = 0; i < evCache.length; i++) {
-            if (ev.pointerId == evCache[i].pointerId) {
-                evCache[i] = ev;
-                break;
-            }
-        }
-        if (evCache.length == 2) {
-            let curDiff = Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY);
-            if (prevDiff > 0) {
-                deltaScale((curDiff - prevDiff) / 1000);
-                if (curDiff > prevDiff) {
-                    // The distance between the two pointers has increased
-                    //console.log("in", Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY))
-                }
-                if (curDiff < prevDiff) {
-                    // The distance between the two pointers has decreased
-                    //console.log("out", Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY))
-                }
-            }
-            prevDiff = curDiff;
-        }
-    }
-    function pointerup_handler(ev) {
-        remove_event(ev);
-        if (evCache.length < 2) {
-            prevDiff = -1;
-        }
-    }
-    function remove_event(ev) {
-        for (let i = 0; i < evCache.length; i++) {
-            if (evCache[i].pointerId == ev.pointerId) {
-                evCache.splice(i, 1);
-                break;
-            }
-        }
-    }
-    //mapContainer.addEventListener("pointerdown", pointerdown_handler);//onpointerdown = pointerdown_handler;
-    //mapContainer.addEventListener("pointermove", pointermove_handler);
-    //mapContainer.addEventListener("pointerup", pointerup_handler);
-    //mapContainer.addEventListener("pointercancel", pointerup_handler);
-    //mapContainer.addEventListener("pointerout", pointerup_handler);
-    //mapContainer.addEventListener("pointerleave", pointerup_handler);
-}
-let scale = 1;
-function getScale() {
-    return scale;
-}
-function setScale(newScale) {
-    scale = newScale;
-    map.style.transform = `scale(${newScale})`;
-}
-function deltaScale(newDeltaScale) {
-    setScale(scale + newDeltaScale);
-}
-function scrollZoom(e) {
-    deltaScale(e["wheelDelta"] / 1000);
-}
-//document.addEventListener("wheel", scrollZoom);
-//setScale(1);
 function drawDirections(route) {
     while (directions.firstElementChild) {
         directions.removeChild(directions.firstElementChild);
@@ -406,7 +363,7 @@ function A_Star(start, goal) {
         console.log("one last", openSet);
     }
     // Open set is empty but goal was never reached
-    throw new Error("how did we get here? " + start + goal);
+    throw new Error("how did we get here? " + start.id + " " + goal);
 }
 function pushSelector(selector, array, target = document) {
     let results = target.querySelectorAll(selector);
@@ -440,13 +397,11 @@ function getAllConnectedNodes(element) {
             pushSelector(`map-door[data-destination=${element.dataset["otherStreet"]}]`, nodes);
             pushSelector(`map-intersection[data-other-street=${element.dataset["otherStreet"]}]`, nodes);
             pushSelector(`map-intersection[data-other-street=${element.parentElement.id}]`, nodes);
+            pushSelector(`#${element.dataset["otherStreet"]} > map-intersection`, nodes);
             pushSelector("map-intersection", nodes, element.parentElement);
             break;
     }
-    let index = nodes.indexOf(element);
-    if (index >= 0) {
-        nodes.splice(index, 1);
-    }
+    nodes = nodes.filter((node) => (node && node != element));
     return nodes;
 }
 function getGlobalCoordinates(element) {
@@ -454,19 +409,25 @@ function getGlobalCoordinates(element) {
         case "map-room":
             return new Point(element.offsetLeft + (element.offsetWidth / 2), element.offsetTop + (element.offsetHeight / 2));
         case "map-door":
-            return new Point(element.offsetLeft + element.parentElement.offsetLeft, element.offsetTop + element.parentElement.offsetTop);
+            return new Point(element.offsetLeft + element.parentElement.offsetLeft + (element.offsetWidth / 2), element.offsetTop + element.parentElement.offsetTop + (element.offsetHeight / 2));
         case "map-intersection":
             if (element.parentElement.dataset["vertical"]) {
-                return new Point(element.parentElement.offsetLeft, document.getElementById(element.dataset["otherStreet"]).offsetTop);
+                return new Point(element.parentElement.offsetLeft + (element.parentElement.offsetWidth / 2), document.getElementById(element.dataset["otherStreet"]).offsetTop + (document.getElementById(element.dataset["otherStreet"]).offsetHeight / 2));
             }
             else {
-                return new Point(document.getElementById(element.dataset["otherStreet"]).offsetLeft, element.parentElement.offsetTop);
+                return new Point(document.getElementById(element.dataset["otherStreet"]).offsetLeft + (document.getElementById(element.dataset["otherStreet"]).offsetWidth / 2), element.parentElement.offsetTop + (element.parentElement.offsetHeight / 2));
             }
     }
 }
 function getDistance(firstElement, secondElement) {
     const firstCoordinates = getGlobalCoordinates(firstElement), secondCoordinates = getGlobalCoordinates(secondElement);
-    return Math.hypot((firstCoordinates.x - secondCoordinates.x), (firstCoordinates.y - secondCoordinates.y));
+    let distance = Math.hypot((firstCoordinates.x - secondCoordinates.x), (firstCoordinates.y - secondCoordinates.y));
+    if ((firstElement.tagName.toLowerCase() == "map-room" && secondElement.tagName.toLowerCase() == "map-door") || (firstElement.tagName.toLowerCase() == "map-door" && secondElement.tagName.toLowerCase() == "map-room")) {
+        return distance + ROOM_DOOR_SHORTCUT_AVERSION_WEIGHT;
+    }
+    else {
+        return distance;
+    }
 }
 class Point {
     constructor(x, y) {
@@ -492,32 +453,33 @@ function toFirstSearch() {
 }
 function search(e) {
     e.preventDefault();
+    searchResults.style.display = "";
     if (firstSearch) {
         onFirstSearch();
     }
     while (searchResults.firstElementChild) {
         searchResults.removeChild(searchResults.firstElementChild);
     }
-    const data = searchInput.value, dataEscape = CSS.escape(data);
+    const data = searchInput.value, dataEscape = CSS.escape(data), dataRegExp = new RegExp(data, "i");
     let results = [];
     results.push(...map.querySelectorAll("map-room"));
     results = results.filter((element) => ((element.dataset["name"] &&
-        (element.dataset["name"].indexOf(data) >= 0)) ||
+        (element.dataset["name"].search(dataRegExp) >= 0)) ||
         (element.dataset["teacher"] &&
-            (element.dataset["teacher"].indexOf(data) >= 0 ||
-                element.dataset["teacher"].split(".")[1].indexOf(data) >= 0)) ||
+            (element.dataset["teacher"].search(dataRegExp) >= 0 ||
+                element.dataset["teacher"].split(".")[1].search(dataRegExp) >= 0)) ||
         (element.dataset["tag"] &&
-            (element.dataset["tag"].indexOf(data) >= 0))));
+            (element.dataset["tag"].search(dataRegExp) >= 0))));
     results.sort((first, second) => {
         const firstString = ((second.dataset["name"] &&
-            (second.dataset["name"].indexOf(data) >= 0)) ? second.dataset["name"] : ((second.dataset["teacher"] &&
-            (second.dataset["teacher"].indexOf(data) >= 0 ||
-                second.dataset["teacher"].split(".")[1].indexOf(data) >= 0)) ? second.dataset["teacher"] : ((second.dataset["tag"] &&
-            (second.dataset["tag"].indexOf(data) >= 0)) ? second.dataset["tag"] : (console.log("Error", second), "")))), secondString = ((first.dataset["name"] &&
-            (first.dataset["name"].indexOf(data) >= 0)) ? first.dataset["name"] : ((first.dataset["teacher"] &&
-            (first.dataset["teacher"].indexOf(data) >= 0 ||
-                first.dataset["teacher"].split(".")[1].indexOf(data) >= 0)) ? first.dataset["teacher"] : ((first.dataset["tag"] &&
-            (first.dataset["tag"].indexOf(data) >= 0)) ? first.dataset["tag"] : (console.log("Error", first), "")))), difference = secondString.length - firstString.length;
+            (second.dataset["name"].search(dataRegExp) >= 0)) ? second.dataset["name"] : ((second.dataset["teacher"] &&
+            (second.dataset["teacher"].search(dataRegExp) >= 0 ||
+                second.dataset["teacher"].split(".")[1].search(dataRegExp) >= 0)) ? second.dataset["teacher"] : ((second.dataset["tag"] &&
+            (second.dataset["tag"].search(dataRegExp) >= 0)) ? second.dataset["tag"] : (console.log("Error", second), "")))), secondString = ((first.dataset["name"] &&
+            (first.dataset["name"].search(dataRegExp) >= 0)) ? first.dataset["name"] : ((first.dataset["teacher"] &&
+            (first.dataset["teacher"].search(dataRegExp) >= 0 ||
+                first.dataset["teacher"].split(".")[1].search(dataRegExp) >= 0)) ? first.dataset["teacher"] : ((first.dataset["tag"] &&
+            (first.dataset["tag"].search(dataRegExp) >= 0)) ? first.dataset["tag"] : (console.log("Error", first), "")))), difference = secondString.length - firstString.length;
         if (difference === 0) {
             return -firstString.localeCompare(secondString);
         }
@@ -542,6 +504,7 @@ function collapseFloating() {
     floating.style.visibility = "hidden";
     searchInput.style.display = "none";
     searchButton.style.display = "none";
+    directionLocations.style.display = "none";
     collapse.innerText = "<";
     collapse.addEventListener("click", expandFloating);
     collapse.removeEventListener("click", collapseFloating);
@@ -550,6 +513,7 @@ function expandFloating() {
     floating.style.visibility = "";
     searchInput.style.display = "";
     searchButton.style.display = "";
+    directionLocations.style.display = "";
     collapse.innerText = ">";
     collapse.addEventListener("click", collapseFloating);
     collapse.removeEventListener("click", expandFloating);
